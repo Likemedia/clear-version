@@ -276,9 +276,7 @@ function SelectGoodsSubjectTree($lang_id, $id, $curr_id=null){
  * @param null $curr_id
  * @return string
  */
-function SelectGoodsCatsTree($lang_id, $id, $curr_id=null) {
-
-
+function SelectGoodsCatsTree($lang_id, $id, $curr_id=null, $level=0) {
 
     $menu_id_by_level = DB::table('categories')
         ->where('deleted', 0)
@@ -299,8 +297,7 @@ function SelectGoodsCatsTree($lang_id, $id, $curr_id=null) {
     $result = array();
 
     $menu_by_level = array_filter($menu_by_level);
-
-
+    $level++;
 
     if (sizeof($menu_by_level) > 0) {
        $result[] = '<ol class="dd-list">';
@@ -309,37 +306,56 @@ function SelectGoodsCatsTree($lang_id, $id, $curr_id=null) {
            $edit = route('categories.edit', $entry->category_id);
            $delete = route('categories.destroy', $entry->category_id);
 
+           if ((!checkPosts($entry->id))  && ($level != 4)) {
+               $addNew = '#addCategory';
+           }else{
+               $addNew = '#warning';
+           }
 
          $result[] = sprintf(
            '<li class="dd-item dd3-item" data-id="'.$entry->category_id.'">
                 %s
                 <div class="dd-handle dd3-handle">
                 <i class="fa fa-bars"></i>
-</div><div class="dd3-content">
+                </div><div class="dd3-content">
                 </div>
                 %s
             </li>',
-           '<span>'. $entry->id . $entry->name.'</span><div class="buttons">
+           '<span>'. $entry->name.'</span><div class="buttons">
 
                <a href="' . $edit . '"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                
                <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
                
-               <a class="btn-link modal-id" data-toggle="modal" data-target="#addCategory" data-id="' . $entry->category_id . '"><i class="fa fa-plus" aria-hidden="true"></i></a>
+               <a class="btn-link modal-id" data-toggle="modal" data-target="'. $addNew .'" data-id="' . $entry->category_id . '">
+               <i class="fa fa-plus" aria-hidden="true"></i>
+               </a>
                
                <form method="post" action=" '. $delete . '">
                  ' . csrf_field() . method_field("DELETE")  . '
                <button type="submit" class="btn-link"><a href=""><i class="fa fa-trash" aria-hidden="true"></i></a></button>
-                </form>
+               </form>
                
            </div>',
-           SelectGoodsCatsTree($lang_id, $entry->category_id, 0)
+           
+           SelectGoodsCatsTree($lang_id, $entry->category_id, 0, $level)
          );
        }
        $result[] = '</ol>';
      }
 
      return implode($result);
+}
+
+function checkPosts($id){
+    $row = DB::table('posts')
+        ->where('category_id', $id)
+        ->first();
+    
+    if (!is_null($row)) {
+        return true;
+    }
+    return false;
 }
 
 function saveList($list, $parent_id = 0, $m_order = 0) {

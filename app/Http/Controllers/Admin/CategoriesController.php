@@ -13,6 +13,25 @@ use Illuminate\Support\Facades\Validator;
 
 class CategoriesController extends Controller
 {
+    public function __construct()
+    {
+        $categories = \App\Models\Category::all();
+        foreach ($categories as $category):
+
+            $c = \App\Models\Category::where('parent_id', $category->id)->first();
+
+            if (is_null($c)) {
+                \App\Models\Category::find($category->id)->update([
+                    'level' => 1,
+                ]);
+            } else {
+                \App\Models\Category::find($category->id)->update([
+                    'level' => 0,
+                ]);
+            }
+        endforeach;
+    }
+
     public function index()
     {
 
@@ -176,26 +195,7 @@ class CategoriesController extends Controller
                 }
             }
         }
-
-
-        $categories = \App\Models\Category::all();
-        foreach ($categories as $category):
-
-            $c = \App\Models\Category::where('parent_id', $category->id)->first();
-
-            if (is_null($c)) {
-                \App\Models\Category::find($category->id)->update([
-                    'level' => 1,
-                ]);
-            } else {
-                \App\Models\Category::find($category->id)->update([
-                    'level' => 0,
-                ]);
-            }
-        endforeach;
     }
-
-
 
 
 

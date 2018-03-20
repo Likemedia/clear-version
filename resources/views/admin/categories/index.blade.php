@@ -80,7 +80,24 @@
         @include('footer')
     </footer>
 
+    <!-- Modal -->
+    <div class="modal fade" id="warning" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
 
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+          </div>
+          <div class="modal-body">
+            Last level or has posts 
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="addCategory" role="dialog">
@@ -128,14 +145,12 @@
                                                        class="name form-control"
                                                        data-lang="{{ $lang->lang }}">
                                             </li>
-
                                             <li>
                                                 <label>Slug</label>
                                                 <input type="text" name="slug_{{ $lang->lang }}"
                                                        class="slug form-control"
                                                        id="slug-{{ $lang->lang }}">
                                             </li>
-
                                             <li>
                                                 <input style="margin-top: 10px;" type="submit" class="btn btn-primary" value="{{trans('variables.save_it')}}">
                                             </li>
