@@ -32,7 +32,7 @@
                         {{ $tag->translation()->first()->name ?? trans('variables.another_name')}}
                     </td>
 
-                    <td>change it</td>
+                    <td>{{ $tag->articles()->count() }}</td>
 
                     <td>
                         <a href="{{ route('tags.edit', $tag->id) }}">

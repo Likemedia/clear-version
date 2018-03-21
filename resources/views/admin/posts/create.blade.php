@@ -15,67 +15,26 @@
 
 
 
+
     <div class="list-content">
 
         <form class="form-reg" method="POST" action="{{ route('posts.store') }}">
             {{ csrf_field() }}
 
-            <div class="tab-area" style="margin-top: 25px;">
-                <ul class="nav nav-tabs nav-tabs-bordered">
-                    @foreach ($langs as $key => $lang)
-                        <li class="nav-item">
-                            <a href="#{{ $lang->lang }}" class="nav-link  {{ $key == 0 ? ' open active' : '' }}"
-                               data-target="#{{ $lang->lang }}">{{ $lang->lang }}</a>
-                        </li>
+            <div class="part full-part" style="padding: 25px 8px;">
+
+                <label>Category</label>
+                <select class="form-control" name="category_id">
+                    <option disabled>- - -</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->translation()->first()->name }}</option>
                     @endforeach
-                </ul>
+                </select>
+
+                <label>Image</label>
+                <input type="file">
+
             </div>
-
-            @foreach ($langs as $lang)
-                <div class="tab-content {{ $loop->first ? ' active-content' : '' }}" id={{ $lang->lang }}>
-                    <div class="part ">
-                        <ul style="padding: 25px 0;">
-                            <li>
-                                <label>{{trans('variables.title_table')}}</label>
-                                <input type="text" name="title_{{ $lang->lang }}">
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            @endforeach
-
-            <input type="submit" value="{{trans('variables.save_it')}}">
-
-
-        </form>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class="list-content">
-
-        <form class="form-reg" method="POST" action="{{ route('posts.store') }}">
-            {{ csrf_field() }}
-
-            <label>Category</label>
-            <select class="form-control" name="category_id">
-                <option disabled>- - -</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->translation()->first()->name }}</option>
-                @endforeach
-            </select>
-
-            <label>Image</label>
-            <input type="file">
 
 
             @if (!empty($langs))
@@ -136,7 +95,7 @@
 
                                 <li>
                                     <label>Tags</label>
-                                    <select name="tags[]" id="" multiple>
+                                    <select name="tags[]" id="" multiple style="height: 80px;">
                                         <option value="">- - -</option>
                                         @foreach($tags as $tag)
                                             <option value="{{ $tag->id }}">{{ $tag->translation()->first()->name }}</option>
@@ -162,6 +121,18 @@
                         </div>
 
 
+                        <div style="margin-top: 25px;" class="part right-part">
+                            <label>Tags</label>
+                            <ul class="parent-tag">
+                                <li class="tag-clone">
+                                    <input class="" type="text" name="tags_{{ $lang->lang }}">
+                                </li>
+                            </ul>
+
+                            <button class="btn btn-primary btn-sm add-tag">+</button>
+                        </div>
+
+
                     </div>
                 @endforeach
             @endif
@@ -177,5 +148,12 @@
 @section('footer')
     <footer>
         @include('footer')
+
+        <script>
+            $('.add-tag').click(function (e) {
+                e.preventDefault()
+                console.log($('.tag-clone:first-child').clone().first().appendTo($('.parent-tag')));
+            })
+        </script>
     </footer>
 @stop

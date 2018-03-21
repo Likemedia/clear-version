@@ -5,39 +5,20 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Lang;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Routing\Router;
-
 
 class LanguagesController extends Controller
 {
 
     public function index()
     {
-
-
-// dd(app('router')->getRoutes());
-
         $languages = Lang::all();
 
         return view('admin.languages.index', compact('languages'));
     }
 
-    public function delete($id)
-    {
-        Lang::findOrFail($id)->delete();
-
-        return back();
-    }
-
     public function create()
     {
-        // dd(app('router')->getRoutes());
-        $langs = Lang::get();
-
-        return view('admin.languages.create', compact('langs'));
+        return view('admin.languages.create');
     }
 
     public function store(Request $request)
@@ -49,7 +30,7 @@ class LanguagesController extends Controller
 
         $language = new Lang();
         $language->lang = $request->name;
-        $language->descr = $request->description;
+        $language->description = $request->description;
         $language->active = 1;
         $language->save();
 
@@ -72,14 +53,14 @@ class LanguagesController extends Controller
         return back();
     }
 
-    public function default($id)
+    public function setDefault($id)
     {
-        $current = Lang::where('default_lang', '1')->first();
-        $current->default_lang = 0;
+        $current = Lang::where('default', '1')->first();
+        $current->default = 0;
         $current->save();
 
         $new = Lang::findOrFail($id);
-        $new->default_lang = 1;
+        $new->default = 1;
         $new->save();
 
         return back();

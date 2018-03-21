@@ -55,7 +55,7 @@
                         </a>
                     </td>
                     <td class="destroy-element">
-                        <form action="{{ route('tags.destroy', $post->id) }}" method="post">
+                        <form action="{{ route('posts.destroy', $post->id) }}" method="post">
                             {{ csrf_field() }} {{ method_field('DELETE') }}
                             <button type="submit" class="btn-link">
                                 <a>
