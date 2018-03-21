@@ -19,4 +19,9 @@ class PostTranslation extends Model
         'meta_keywords',
         'meta_description,'
     ];
+
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    }
 }

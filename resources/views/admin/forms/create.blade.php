@@ -34,8 +34,8 @@
                     @if (!empty($langs))
                         @foreach ($langs as $lang)
                             <li class="nav-item">
-                                <a href="#{{ $lang->lang }}" class="nav-link  {{ $loop->first ?: ' open active' }}"
-                                   data-toggle="tab" data-target="#{{ $lang->lang }}">{{ $lang->descr }}</a>
+                                <a href="#{{ $lang->lang }}" class="nav-link  {{ $loop->first ? ' open active' : '' }}"
+                                   data-toggle="tab" data-target="#{{ $lang->lang }}">{{ $lang->lang }}</a>
                             </li>
                         @endforeach
                     @endif
@@ -45,7 +45,7 @@
 
             @if (!empty($langs))
                 @foreach ($langs as $lang)
-                    <div class="tab-content {{ $loop->first ?: ' active-content' }}" id={{ $lang->lang }}>
+                    <div class="tab-content {{ $loop->first ?'active-content' : '' }}" id={{ $lang->lang }}>
 
                         <div class="part full-part">
                             <ul>
