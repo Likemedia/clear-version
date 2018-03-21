@@ -60,8 +60,6 @@ class PagesController extends Controller
 
     public function update(Request $request, $id)
     {
-
-
         $page = Page::findOrFail($id);
         $page->alias = $request->alias;
         $page->active = $request->active;
@@ -83,7 +81,7 @@ class PagesController extends Controller
             ]);
 
 //            if (request('image_' . $lang->lang) != null) {
-//                if ()
+//                if ($page::where('lang_id', $lang->id))
 //            }
 
         endforeach;

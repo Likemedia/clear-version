@@ -2,19 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\FormTranslation;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\File;
-use Illuminate\Http\Request;
-use App\Models\Lang;
-use App\Models\Widget;
-use App\Models\WidgetId;
 use App\Models\Form;
-use View;
-use DB;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 
 
 class FormsController extends Controller
@@ -97,35 +88,4 @@ class FormsController extends Controller
 
         return redirect()->route('forms.index');
     }
-
-
-    public function addWidget($contents)
-    {
-        $wigetsId = WidgetId::get();
-        $content_new = $contents;
-
-        if (!empty($wigetsId)) {
-            foreach ($wigetsId as $key => $widgetId) {
-                if (!empty($contents)) {
-                    foreach ($contents as $key => $content) {
-                        echo "[" . $widgetId->short_code . "]";
-                        $lang = Lang::where('lang', $key)->first();
-                        $widget = Widget::where('lang_id', $lang->id)->where('widget_id', $widgetId->id)->first();
-                        if (!is_null($widget)) {
-                            if (strpos($content, "[$widgetId->short_code]") == true) {
-                                // $content_new[$key] = str_replace("[". $widgetId->short_code ."]", 'vdf,l', '<p>[short_code1]</p>');
-                                $content_new[$key] = str_replace("[$widgetId->short_code]", $widget->content, $content);
-                            }
-                            // else{
-                            //     $content_new[$key] = $content;
-                            // }
-
-                        }
-                    }
-                }
-            }
-        }
-        return $content_new;
-    }
-
 }

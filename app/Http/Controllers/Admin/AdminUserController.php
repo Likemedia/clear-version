@@ -26,9 +26,7 @@ class AdminUserController extends Controller
 
     public function createItem()
     {
-        $view = 'admin.user.create-group';
-
-        return view($view, get_defined_vars());
+        return view('admin.user.create-group', get_defined_vars());
     }
 
     public function createUser()

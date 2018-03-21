@@ -5,13 +5,8 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="_token" content="{{ csrf_token() }}">
-    @if(!is_null($modules_submenu_name))
-        <title>{{$modules_submenu_name->{'name_'.$lang} or trans('variables.title_page')}}</title>
-    @elseif(!is_null($modules_name))
-        <title>{{$modules_name->{'name_'.$lang} or trans('variables.title_page')}}</title>
-    @else
-        <title>{{trans('variables.title_page')}}</title>
-    @endif
+
+    <title>{{trans('variables.title_page')}}</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -83,8 +78,6 @@
         </div>
     </div>
 
-    {{--<!-- <script src="{{ asset('js/vendor.js') }}"></script> -->--}}
-    {{--<!-- <script src="{{ asset('js/app.js') }}"></script> -->--}}
-    
+
 </body>
 </html>
