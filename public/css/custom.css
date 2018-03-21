@@ -1319,3 +1319,9 @@ a.black:hover{
     display: inline-block;
     width: 30px;
 }
+.tag-clone{
+    display: none;
+}
+.parent-tag li{
+    margin: 10px 0;
+}

@@ -123,9 +123,12 @@
 
                         <div style="margin-top: 25px;" class="part right-part">
                             <label>Tags</label>
-                            <ul class="parent-tag" data-name="tags_{{ $lang->lang }}[]">
+                            <ul class="parent-tag">
                                 <li class="tag-clone">
-                                    <input class="" type="text" name="tags_{{ $lang->lang }}">
+                                    <input class="" type="text" name="tags_{{ $lang->lang }}[]">
+                                </li>
+                                <li>
+                                    <input class="" type="text" name="tags_{{ $lang->lang }}[]">
                                 </li>
                             </ul>
 
@@ -154,8 +157,7 @@
                 e.preventDefault();
 
                 $.each($('.parent-tag'), function( index, value ) {
-                  // $name = $('.parent-tag').eq(index).attr('data-name');
-                  $('.tag-clone').eq(index).clone().appendTo($('.parent-tag').eq(index));
+                   $('.tag-clone').eq(index).clone().removeClass("tag-clone").appendTo($('.parent-tag').eq(index));
                 });
             })
         </script>
