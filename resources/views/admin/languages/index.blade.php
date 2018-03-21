@@ -27,9 +27,9 @@
 
             <tr>
               <td>{{ $language->lang }}</td>
-              <td>{{ $language->descr }}</td>
+              <td>{{ $language->description }}</td>
 
-              @if($language->default_lang == 1)
+              @if($language->default == 1)
                 <td>Default Language</td>
               @else
                 <td>

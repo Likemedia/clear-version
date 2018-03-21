@@ -1,19 +1,12 @@
 <?php
 
-Route::get('/categories', function () {
-
-
-
-
-    return \App\Models\Category::where('level', 1)->get();
-
-
-
-});
 /*
  * =====Temporary
  */
 
+Route::get('/categories', function () {
+    return \App\Models\Category::where('level', 1)->get();
+});
 
 Route::get('/form', 'TemporarController@index');
 /*
@@ -39,6 +32,8 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
 
     Route::get('/', 'Admin\DefaultController@index');
 
+    Route::get('/users', 'Admin\AdminUserController@index');
+
 
     Route::resource('/pages', 'Admin\PagesController');
     Route::patch('/pages/{id}/change-status', 'Admin\PagesController@status')->name('pages.change.status');
@@ -57,7 +52,7 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     Route::group(['prefix' => 'settings'], function () {
 
         Route::resource('/languages', 'Admin\LanguagesController');
-        Route::patch('/languages/set-default/{id}', 'Admin\LanguagesController@default')->name('languages.default');
+        Route::patch('/languages/set-default/{id}', 'Admin\LanguagesController@setDefault')->name('languages.default');
 
     });
 

@@ -19,13 +19,9 @@ class AdminUserController extends Controller
 {
     public function index()
     {
-        $view = 'admin.user.users-group';
+        $users = User::all();
 
-        $user_group = AdminUserGroup::where('deleted', 0)
-            ->where('active', 1)
-            ->paginate(10);
-
-        return view($view, get_defined_vars());
+        return view('admin.user.users', compact('users'));
     }
 
     public function createItem()

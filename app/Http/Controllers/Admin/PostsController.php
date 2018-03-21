@@ -44,8 +44,14 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
+
+//        $name = time() . '-' . $request->image->getClientOriginalName();
+//        $request->image->move('images/posts', $name);
+
         $post = new Post();
         $post->category_id = $request->category_id;
+//        $post->image = $name;
         $post->save();
 
         foreach ($this->langs as $lang):
@@ -53,18 +59,25 @@ class PostsController extends Controller
                 'lang_id' => $lang->id,
                 'title' => request('title_' . $lang->lang),
                 'body' => request('body_' . $lang->lang),
-                'url' => request('url_' . $lang->lang),
                 'slug' => request('slug_' . $lang->lang),
+                'url' => request('url_' . $lang->lang),
                 'meta_title' => request('meta_title_' . $lang->lang),
                 'meta_keywords' => request('meta_keywords_' . $lang->lang),
                 'meta_description' => request('meta_description_' . $lang->lang),
-                'alt_attribute' => request('alt_text_' . $lang->lang),
             ]);
+
+//            if ($request->tags)
         endforeach;
 
-        foreach ($request->tags as $tag):
-            $post->tags()->attach($tag);
-        endforeach;
+        if ($request->tags != null) {
+
+            foreach ($request->tags as $tag):
+                $post->tags()->attach($tag);
+            endforeach;
+
+        }
+
+
 
         session()->flash('message', 'New item has been created!');
 
@@ -113,6 +126,16 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::findOrFail($id);
+
+        if ( file_exists('/images/posts'.$post->image)) {
+            unlink('/images/posts'.$post->image);
+        }
+
+        $post->delete();
+
+        session()->flash('message', 'Item has been deleted!');
+
+        return redirect()->route('posts.index');
     }
 }
