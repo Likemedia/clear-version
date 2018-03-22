@@ -36,7 +36,7 @@
                         {{ $post->translation()->first()->title ?? trans('variables.another_name')}}
                     </td>
                     <td>
-                        {!! $post->translation()->first()->body !!}
+                        {!! str_limit($post->translation()->first()->body, 100) !!}
                     </td>
                     <td>
                         {{ $post->translation()->first()->slug }}
@@ -45,9 +45,7 @@
                         {{ $post->translation()->first()->url }}
                     </td>
                     <td>
-                        @foreach($post->tags as $tag)
-                            {{ $tag->translation()->first()->name }} <br>
-                        @endforeach
+                        // tags
                     </td>
                     <td>
                         <a href="{{ route('posts.edit', $post->id) }}">

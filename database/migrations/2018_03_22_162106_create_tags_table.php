@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTagsTranslationTable extends Migration
+class CreateTagsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,15 @@ class CreateTagsTranslationTable extends Migration
      */
     public function up()
     {
-        Schema::create('tags_translation', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-
+        Schema::create('tags', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('tag_id');
             $table->unsignedInteger('lang_id');
+            $table->unsignedInteger('post_id');
             $table->string('name');
 
-            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
-            $table->foreign('lang_id')->references('id')->on('lang')->onDelete('cascade');
 
+            $table->foreign('lang_id')->references('id')->on('lang')->onDelete('cascade');
+            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
 
             $table->timestamps();
         });
@@ -36,6 +34,6 @@ class CreateTagsTranslationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tags_translation');
+        Schema::dropIfExists('tags');
     }
 }

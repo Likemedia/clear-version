@@ -32,7 +32,7 @@
                 </select>
 
                 <label>Image</label>
-                <input type="file">
+                <input type="file" name="image">
 
             </div>
 
@@ -72,7 +72,7 @@
                                               data-type="ckeditor"></textarea>
                                     <script>
                                         CKEDITOR.replace('body-{{ $lang->lang }}', {
-                                            language: '{{$lang}}',
+                                            language: '{{$lang->lang}}',
                                         });
                                     </script>
                                 </li>
@@ -93,15 +93,6 @@
                                     <input type="text" name="slug_{{ $lang->lang }}">
                                 </li>
 
-                                <li>
-                                    <label>Tags</label>
-                                    <select name="tags[]" id="" multiple style="height: 80px;">
-                                        <option value="">- - -</option>
-                                        @foreach($tags as $tag)
-                                            <option value="{{ $tag->id }}">{{ $tag->translation()->first()->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </li>
 
                                 <li>
                                     <label>{{trans('variables.meta_title_page')}}</label>
@@ -123,16 +114,22 @@
 
                         <div style="margin-top: 25px;" class="part right-part">
                             <label>Tags</label>
-                            <ul class="parent-tag">
-                                <li class="tag-clone">
-                                    <input class="" type="text" name="tags_{{ $lang->lang }}[]">
-                                </li>
-                                <li>
-                                    <input class="" type="text" name="tags_{{ $lang->lang }}[]">
-                                </li>
-                            </ul>
 
-                            <button class="btn btn-primary btn-sm add-tag">+</button>
+                            <li>
+                                @foreach($tags as $tag)
+                                    @if($tag->id == $lang->id)
+                                        <input type="checkbox" name="tags[]">{{ $tag->name }}
+                                    @endif
+                                @endforeach
+                            </li>
+
+
+                            <ul>
+                                <button class="btn btn-primary btn-sm tag">+</button>
+
+                                <input type="text" name="tag_{{ $lang->lang }}[]" class="tag_{{ $lang->lang }}" />
+
+                            </ul>
                         </div>
 
 
@@ -153,13 +150,14 @@
         @include('footer')
 
         <script>
-            $('.add-tag').click(function (e) {
+
+            $('button.tag').click(function(e) {
                 e.preventDefault();
 
-                $.each($('.parent-tag'), function( index, value ) {
-                   $('.tag-clone').eq(index).clone().removeClass("tag-clone").appendTo($('.parent-tag').eq(index));
-                });
-            })
+                $input = $(this).siblings().last().clone().val('');
+                $(this).parent().append($input);
+            });
+
         </script>
     </footer>
 @stop

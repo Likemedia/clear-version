@@ -17,7 +17,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('translation')->get();
+        $posts = Post::with(['translation', 'tags'])->get();
 
         return view('admin.posts.index', compact('posts'));
     }
@@ -31,7 +31,7 @@ class PostsController extends Controller
     {
         $categories = Category::where('level', 1)->get();
 
-        $tags = Tag::with('translation')->get();
+        $tags = Tag::all();
 
         return view('admin.posts.create', compact('categories', 'tags'));
     }
@@ -39,13 +39,11 @@ class PostsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        dd($request->all());
-
 //        $name = time() . '-' . $request->image->getClientOriginalName();
 //        $request->image->move('images/posts', $name);
 
@@ -53,6 +51,7 @@ class PostsController extends Controller
         $post->category_id = $request->category_id;
 //        $post->image = $name;
         $post->save();
+
 
         foreach ($this->langs as $lang):
             $post->translations()->create([
@@ -66,17 +65,25 @@ class PostsController extends Controller
                 'meta_description' => request('meta_description_' . $lang->lang),
             ]);
 
-//            if ($request->tags)
-        endforeach;
+            $tags = request('tags_'.$lang->lang);
 
-        if ($request->tags != null) {
-
-            foreach ($request->tags as $tag):
-                $post->tags()->attach($tag);
+            foreach ($tags as  $newTag):
+                 $tag = new Tag();
+                $tag->lang_id = $lang->id;
+                $tag->post_id = $post->id;
+                $tag->name = $newTag;
             endforeach;
 
-        }
-
+            if (request('tag_'.$lang->lang) != null) {
+                $tags1 = request('tag_'.$lang->lang);
+                foreach ($tags1 as $newTag):
+                    $tag = new Tag();
+                    $tag->lang_id = $lang->id;
+                    $tag->post_id = $post->id;
+                    $tag->name = $newTag;
+                endforeach;
+            }
+        endforeach;
 
 
         session()->flash('message', 'New item has been created!');
@@ -87,7 +94,7 @@ class PostsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -98,7 +105,7 @@ class PostsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -109,8 +116,8 @@ class PostsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -121,15 +128,15 @@ class PostsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
 
-        if ( file_exists('/images/posts'.$post->image)) {
-            unlink('/images/posts'.$post->image);
+        if (file_exists('/images/posts' . $post->image)) {
+            unlink('/images/posts' . $post->image);
         }
 
         $post->delete();

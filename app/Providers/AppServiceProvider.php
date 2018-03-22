@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Models\Lang;
 use App\Models\Module;
 use Illuminate\Support\ServiceProvider;
-use View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,11 +17,11 @@ class AppServiceProvider extends ServiceProvider
     {
         session(['applocale' => Lang::where('default', 1)->first()->name]);
 
-        View::share('langs', Lang::all());
+        \View::share('langs', Lang::all());
 
-        View::share('lang', Lang::where('lang', session('applocale') ?? 'ro')->get());
+        \View::share('lang', Lang::where('lang', session('applocale') ?? 'ro')->get());
 
-        View::share('menu', Module::with(['translation'])->get());
+        \View::share('menu', Module::with(['translation'])->get());
     }
 
     /**

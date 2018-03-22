@@ -6,10 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tag extends Model
 {
-    public function translations() {
-        return $this->hasMany(TagTranslation::class);
-    }
-
     public function translation()
     {
         $lang = Lang::where('lang', session('applocale'))->first()->id ?? Lang::first()->id;
@@ -17,8 +13,8 @@ class Tag extends Model
         return $this->hasMany(TagTranslation::class)->where('lang_id', $lang);
     }
 
-    public function articles()
+    public function post()
     {
-        return $this->belongsToMany(Post::class);
+        return $this->hasOne(Post::class);
     }
 }
