@@ -18,7 +18,7 @@
 
     <div class="list-content">
 
-        <form class="form-reg" method="POST" action="{{ route('posts.store') }}">
+        <form class="form-reg" method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
             {{ csrf_field() }}
 
             <div class="part full-part" style="padding: 25px 8px;">

@@ -45,12 +45,12 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-//        $name = time() . '-' . $request->image->getClientOriginalName();
-//        $request->image->move('images/posts', $name);
+        $name = time() . '-' . $request->image->getClientOriginalName();
+        $request->image->move('images/posts', $name);
 
         $post = new Post();
         $post->category_id = $request->category_id;
-//        $post->image = $name;
+        $post->image = $name;
         $post->save();
 
 
@@ -67,23 +67,27 @@ class PostsController extends Controller
             ]);
 
 
-            $tags = request('tag_' . $lang->lang);
-            foreach ($tags as $newTag):
-                $tag = new Tag();
-                $tag->lang_id = $lang->id;
-                $tag->post_id = $post->id;
-                $tag->name = $newTag;
-                $tag->save();
-            endforeach;
+            if (request('tag_' . $lang->lang) != null) {
+                $tags = request('tag_' . $lang->lang);
+                foreach ($tags as $newTag):
+                    $tag = new Tag();
+                    $tag->lang_id = $lang->id;
+                    $tag->post_id = $post->id;
+                    $tag->name = $newTag;
+                    $tag->save();
+                endforeach;
+            }
 
-            $tags1 = request('tags_' . $lang->lang);
-            foreach ($tags1 as $newTag):
-                $tag = new Tag();
-                $tag->lang_id = $lang->id;
-                $tag->post_id = $post->id;
-                $tag->name = $newTag;
-                $tag->save();
-            endforeach;
+            if (request('tags_' . $lang->lang) != null) {
+                $tags1 = request('tags_' . $lang->lang);
+                foreach ($tags1 as $newTag):
+                    $tag = new Tag();
+                    $tag->lang_id = $lang->id;
+                    $tag->post_id = $post->id;
+                    $tag->name = $newTag;
+                    $tag->save();
+                endforeach;
+            }
 
 
         endforeach;
