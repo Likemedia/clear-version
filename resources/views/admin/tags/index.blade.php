@@ -14,7 +14,8 @@
         ]
     ])
 
-    @if(!$tags->isEmpty())
+
+    @if(count($tags))
 
         <table class="el-table" id="tablelistsorter">
             <thead>
@@ -31,9 +32,7 @@
                     <td>
                         {{ $tag->name ?? trans('variables.another_name')}}
                     </td>
-
-                    <td>change it</td>
-
+                    <td>{{ $tag->count }}</td>
                     <td>
                         <a href="{{ route('tags.edit', $tag->id) }}">
                             <i class="fa fa-edit"></i>
@@ -41,6 +40,30 @@
                     </td>
                     <td class="destroy-element">
                         <form action="{{ route('tags.destroy', $tag->id) }}" method="post">
+                            {{ csrf_field() }} {{ method_field('DELETE') }}
+                            <button type="submit" class="btn-link">
+                                <a>
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
+
+            @foreach($zeroCountTags as $zeroTag)
+                <tr id="{{ $zeroTag->id }}">
+                    <td>
+                        {{ $zeroTag->name ?? trans('variables.another_name')}}
+                    </td>
+                    <td>0</td>
+                    <td>
+                        <a href="{{ route('tags.edit', $zeroTag->id) }}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
+                    <td class="destroy-element">
+                        <form action="{{ route('tags.destroy', $zeroTag->id) }}" method="post">
                             {{ csrf_field() }} {{ method_field('DELETE') }}
                             <button type="submit" class="btn-link">
                                 <a>

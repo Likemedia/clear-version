@@ -31,7 +31,7 @@ class PostsController extends Controller
     {
         $categories = Category::where('level', 1)->get();
 
-        $tags = Tag::all();
+        $tags = Tag::distinct()->get(['name', 'lang_id']);
 
         return view('admin.posts.create', compact('categories', 'tags'));
     }
@@ -45,12 +45,12 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        $name = time() . '-' . $request->image->getClientOriginalName();
-        $request->image->move('images/posts', $name);
+//        $name = time() . '-' . $request->image->getClientOriginalName();
+//        $request->image->move('images/posts', $name);
 
         $post = new Post();
         $post->category_id = $request->category_id;
-        $post->image = $name;
+//        $post->image = $name;
         $post->save();
 
 
@@ -66,8 +66,7 @@ class PostsController extends Controller
                 'meta_description' => request('meta_description_' . $lang->lang),
             ]);
 
-
-            if (request('tag_' . $lang->lang) != null) {
+            if ( (request('tag_' . $lang->lang) != null) && !(request('tag_' . $lang->lang)[0] == "") ) {
                 $tags = request('tag_' . $lang->lang);
                 foreach ($tags as $newTag):
                     $tag = new Tag();
@@ -78,7 +77,7 @@ class PostsController extends Controller
                 endforeach;
             }
 
-            if (request('tags_' . $lang->lang) != null) {
+            if ( request('tags_' . $lang->lang) != null ) {
                 $tags1 = request('tags_' . $lang->lang);
                 foreach ($tags1 as $newTag):
                     $tag = new Tag();
@@ -88,7 +87,6 @@ class PostsController extends Controller
                     $tag->save();
                 endforeach;
             }
-
 
         endforeach;
 

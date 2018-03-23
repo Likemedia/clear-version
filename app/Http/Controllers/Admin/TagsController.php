@@ -15,9 +15,22 @@ class TagsController extends Controller
      */
     public function index()
     {
-        $tags = Tag::all();
+        $tags = \DB::select("SELECT DISTINCT name, id, COUNT('post_id') as 'count' FROM tags WHERE post_id IS NOT NULL GROUP BY name ORDER BY COUNT('post_id') DESC");
 
-        return view('admin.tags.index', compact('tags'));
+        $ts = Tag::where('post_id', null)->get();
+
+        $ids = [];
+        foreach ($ts as $t) {
+            foreach ($tags as $tag) {
+                if ($tag->name == $t->name) {
+                    $ids[] = $t->id;
+                }
+            }
+        }
+
+        $zeroCountTags = Tag::where('post_id', null)->whereNotIn('id', $ids)->get();
+
+        return view('admin.tags.index', compact('tags', 'zeroCountTags'));
     }
 
     /**
@@ -33,7 +46,7 @@ class TagsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -53,7 +66,7 @@ class TagsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -66,22 +79,15 @@ class TagsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-//        $tag = Tag::findOrFail($id);
-//
-////        $tag->translations()->delete();
-////
-////        foreach ($this->langs as $lang):
-////            $tag->translations()->create([
-////                'lang_id' => $lang->id,
-////                'name' => request('name_' . $lang->lang),
-////            ]);
-////        endforeach;
+        $tag = Tag::findOrFail($id);
+        $tag->name = $request->name;
+        $tag->save();
 
         session()->flash('message', 'Item has been updated!');
 
@@ -91,7 +97,7 @@ class TagsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

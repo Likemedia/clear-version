@@ -16,12 +16,11 @@ class CreateTagsTable extends Migration
         Schema::create('tags', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('lang_id');
-            $table->unsignedInteger('post_id');
+            $table->unsignedInteger('post_id')->nullable();
             $table->string('name');
 
 
             $table->foreign('lang_id')->references('id')->on('lang')->onDelete('cascade');
-            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
 
             $table->timestamps();
         });
