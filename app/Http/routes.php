@@ -25,12 +25,16 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     Route::resource('/forms', 'Admin\FormsController');
 
     Route::resource('/categories', 'Admin\CategoriesController');
+    Route::post('/categories/move/posts', 'Admin\CategoriesController@movePosts')->name('categories.move.posts');
     Route::post('/categories/change', 'Admin\CategoriesController@change')->name('categories.change');
+    Route::post('/categories/part', 'Admin\CategoriesController@partialSave')->name('categories.partial.save');
+    
     Route::post('/categories/part', 'Admin\CategoriesController@partialSave')->name('categories.partial.save');
 
     Route::resource('/tags', 'Admin\TagsController');
 
     Route::resource('/posts', 'Admin\PostsController');
+    Route::get('/posts/category/{category}', 'Admin\PostsController@getPostsByCategory')->name('posts.category');
 
     Route::group(['prefix' => 'settings'], function () {
 

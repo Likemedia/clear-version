@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
 
         View::share('langs', Lang::all());
 
-        View::share('lang', Lang::where('lang', session('applocale') ?? 'ro')->get());
+        View::share('lang', Lang::where('lang', session('applocale') ?? Lang::first()->lang)->first());
 
         View::share('menu', Module::with(['translation'])->get());
     }

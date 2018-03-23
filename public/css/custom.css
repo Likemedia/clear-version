@@ -1303,7 +1303,7 @@ a.black:hover{
     margin-bottom: 0;
 }
 .min-height{
-    min-height: 500px;
+    min-height: 1000px;
     padding: 30px 15px !important;
 }
 .jstree-node {

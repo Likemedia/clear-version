@@ -1,20 +1,4 @@
 <?php
-
-//function urlForAction($action = 'index')
-//{
-//    return url(Request::segment(1) .'/'. Request::segment(2) .'/'. Request::segment(3) .'/'. $action);
-//}
-//
-//function urlForFunction($action = 'index'){
-//    return url(Request::segment(1) .'/'. Request::segment(2) .'/'. $action);
-//}
-//
-//function urlForActionBreadcrumbs($action = 'index')
-//{
-//    return url(Request::segment(1) .'/'. Request::segment(2) .'/'. str_replace("-options","",Request::segment(3)) .'/'. $action);
-//}
-
-
 function longUrlForLanguage($lang, $action = 'index')
 {
     return url($lang .'/'. Request::segment(2) .'/'. Request::segment(3) .'/'. Request::segment(4) .'/'. Request::segment(5) .'/'. $action);
@@ -24,11 +8,6 @@ function urlForLanguage($lang, $action = 'index')
 {
     return url($lang .'/'. Request::segment(2) .'/'. Request::segment(3) .'/'. Request::segment(4) .'/'. $action);
 }
-
-// function urlForLanguage($lang, $action = 'index')
-// {
-//     return url($lang .'/'. Request::segment(2) .'/'. Request::segment(3) .'/'. Request::segment(4) .'/'. $action);
-// }
 
 function shortUrlForLanguage($lang, $action = 'index')
 {
@@ -49,7 +28,6 @@ function urlForLanguageBreadcrumbs($lang, $action = 'index')
 {
     return url($lang .'/'. Request::segment(2) .'/'. str_replace("-options","",Request::segment(3)) .'/'. Request::segment(4) .'/'. $action);
 }
-
 
 /**
  * Verify if element has name
@@ -306,10 +284,12 @@ function SelectGoodsCatsTree($lang_id, $id, $curr_id=null, $level=0) {
            $edit = route('categories.edit', $entry->category_id);
            $delete = route('categories.destroy', $entry->category_id);
 
-           if ((!checkPosts($entry->id))  && ($level != 4)) {
+           if ((!checkPosts($entry->id)) && ($level != 4)) {
                $addNew = '#addCategory';
+               $postsLink = '';
            }else{
                $addNew = '#warning';
+               $postsLink = '<a href="/back/posts/category/'.$entry->category_id.'"><i class="fa fa-bars"></i></a>';
            }
 
          $result[] = sprintf(
@@ -323,21 +303,23 @@ function SelectGoodsCatsTree($lang_id, $id, $curr_id=null, $level=0) {
             </li>',
            '<span>'. $entry->name.'</span><div class="buttons">
 
+              '. $postsLink .'
+
                <a href="' . $edit . '"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-               
+
                <a href=""><i class="fa fa-eye" aria-hidden="true"></i></a>
-               
-               <a class="btn-link modal-id" data-toggle="modal" data-target="'. $addNew .'" data-id="' . $entry->category_id . '">
+
+               <a class="btn-link modal-id" data-toggle="modal" data-target="'. $addNew .'" data-id="' . $entry->category_id . '" data-name="'. $entry->name .'">
                <i class="fa fa-plus" aria-hidden="true"></i>
                </a>
-               
+
                <form method="post" action=" '. $delete . '">
                  ' . csrf_field() . method_field("DELETE")  . '
                <button type="submit" class="btn-link"><a href=""><i class="fa fa-trash" aria-hidden="true"></i></a></button>
                </form>
-               
+
            </div>',
-           
+
            SelectGoodsCatsTree($lang_id, $entry->category_id, 0, $level)
          );
        }
@@ -347,11 +329,28 @@ function SelectGoodsCatsTree($lang_id, $id, $curr_id=null, $level=0) {
      return implode($result);
 }
 
+/**
+ * @param $lang_id
+ * @param $id
+ * @return string
+ */
+function SelectCatsTree($lang_id, $id) {
+    $categories =DB::table('categories_translation')
+        ->join('categories', 'categories_translation.category_id', '=', 'categories.id')
+        ->where('parent_id', $id)
+        ->where('lang_id', $lang_id)
+        ->get();
+
+    if (!empty($categories)) {
+        return $categories;
+    }
+}
+
 function checkPosts($id){
     $row = DB::table('posts')
         ->where('category_id', $id)
         ->first();
-    
+
     if (!is_null($row)) {
         return true;
     }
@@ -362,26 +361,11 @@ function saveList($list, $parent_id = 0, $m_order = 0) {
         foreach($list as $item) {
 
         $goodsCats = DB::table('goods_subject_id')
-            // ->join('goods_subject_id', 'goods_subject.goods_subject_id', '=', 'goods_subject_id.id')
-            // ->where('goods_subject_id', $one_menu_id_by_level->id)
             ->where('id', $item["id"])
             ->update([
                 'p_id' => $parent_id,
                 'position' => $m_order
             ]);
-
-        // $sql = "
-        //     UPDATE items
-        //     SET
-        //         parent_id = :parent_id,
-        //         m_order = :m_order
-        //     WHERE id = :id
-        // ";
-        // $statement = $conn->prepare($sql);
-        // $statement->bindValue(":parent_id", $parent_id, PDO::PARAM_INT);
-        // $statement->bindValue(":id", $item["id"], PDO::PARAM_INT);
-        // $statement->bindValue(":m_order", $m_order, PDO::PARAM_INT);
-        // $statement->execute();
 
         if (array_key_exists("children", $item)) {
             saveList($conn, $item["children"], $item["id"], $m_order);
@@ -851,7 +835,6 @@ function getFontSize($number, $all){
     $max = max($all);
     $min = min($all);
     $middle = ($max + $min) / 2;
-    // $rand = rand(1, 5);
     $rand = 0;
 
     if ($number == $max) {
@@ -866,9 +849,3 @@ function getFontSize($number, $all){
         return 8 + $rand;
     }
 }
-
-
-// function getRandomColor(){
-//     return '#'.dechex(rand(0x000, 0x999));
-//     // return '#'.mt_rand(0, 255);
-// }

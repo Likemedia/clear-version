@@ -2388,8 +2388,11 @@ pre {
       background-color: inherit; }
     .sidebar .nav ul {
       padding: 0;
-      
+      margin-left: 10px;
       overflow: hidden; }
+      .open{
+        background-color: #333e48;
+      }
       .loaded .sidebar .nav ul {
         height: auto; }
     .sidebar .nav li.active ul {
@@ -2419,7 +2422,7 @@ pre {
               transform: rotate(90deg); }
     .sidebar .nav > li > a i {
       margin-right: 5px;
-      font-size: 16px; 
+      font-size: 16px;
       text-align: center;
       min-width: 18px;}
       .sidebar .nav > li > a i.arrow {
@@ -2433,7 +2436,7 @@ pre {
     .sidebar .nav > li > ul > li a {
       padding-top: 10px;
       padding-bottom: 10px;
-      padding-left: 50px;
+      padding-left: 10px;
       background-color: #333e48; }
     .sidebar .nav > li > ul > li.active a {
       color: #ffffff; }

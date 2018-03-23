@@ -17,31 +17,32 @@
                         <li>
                             <a href="/back">
                                 <i class="fa fa-dashboard"></i>Control Panel
-                                </a>
+                            </a>
                         </li>
 
                         @foreach($menu as $m)
+                            @if ($m->src ==  'posts')
+                              @include('admin.partials.menuCategories')
+                            @else
+                              <li class="{{ request()->segment(2) == $m->src  ? 'active' : ''}}" >
 
-                            <li class="{{ request()->segment(2) == $m->src  ? 'active' : ''}}" >
+                                  <a class="{{ count($m->modules_submenu) > 0 ? 'drop-down' : '' }}" class=""
+                                     href="{{ url('/back/'.$m->src) }}">
+                                      <i class="fa {{ $m->icon }}"></i>
+                                      {{ $m->translation()->first()->name ?? '' }} {!! count($m->modules_submenu) > 0 ? '<i class="fa arrow"></i></a>' : '' !!}
+                                  </a>
 
-
-                                <a class="{{ count($m->modules_submenu) > 0 ? 'drop-down' : '' }}"
-                                   href="{{ url('/back/'.$m->src) }}">
-                                    <i class="fa {{ $m->icon }}"></i>
-
-
-                                    {{ $m->translation()->first()->name ?? '' }} {!! count($m->modules_submenu) > 0 ? '<i class="fa arrow"></i></a>' : '' !!}
-                                </a>
-                                @if(count($m->modules_submenu) > 0)
-                                    <ul class="drop-hd">
-                                        @foreach($m->modules_submenu as $mod_sub)
-                                            <li {{Request::url() == url($lang.'/back/'.$m->src.'/'.$mod_sub->src) ? 'class=active' : ''}}>
-                                                <a href="{!! url($lang.'/back/'.$m->src.'/'.$mod_sub->src) !!}" {{Request::segment(4) == $m->src ? 'class=active-menu' : ''}}>{{ $mod_sub->{'name_'.$lang} }}</a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                            </li>
+                                  @if(count($m->modules_submenu) > 0)
+                                      <ul class="drop-hd">
+                                          @foreach($m->modules_submenu as $mod_sub)
+                                              <li {{Request::url() == url($lang.'/back/'.$m->src.'/'.$mod_sub->src) ? 'class=active' : ''}}>
+                                                  <a href="{!! url($lang.'/back/'.$m->src.'/'.$mod_sub->src) !!}" {{Request::segment(4) == $m->src ? 'class=active-menu' : ''}}>{{ $mod_sub->{'name_'.$lang} }}</a>
+                                              </li>
+                                          @endforeach
+                                      </ul>
+                                  @endif
+                              </li>
+                            @endif
                         @endforeach
                     </ul>
                 @endif
