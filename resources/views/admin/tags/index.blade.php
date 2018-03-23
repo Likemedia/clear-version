@@ -29,10 +29,10 @@
             @foreach($tags as $tag)
                 <tr id="{{ $tag->id }}">
                     <td>
-                        {{ $tag->translation()->first()->name ?? trans('variables.another_name')}}
+                        {{ $tag->name ?? trans('variables.another_name')}}
                     </td>
 
-                    <td>{{ $tag->articles()->count() }}</td>
+                    <td>change it</td>
 
                     <td>
                         <a href="{{ route('tags.edit', $tag->id) }}">

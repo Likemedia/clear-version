@@ -15,7 +15,7 @@ class TagsController extends Controller
      */
     public function index()
     {
-        $tags = Tag::with('translation')->get();
+        $tags = Tag::all();
 
         return view('admin.tags.index', compact('tags'));
     }
@@ -38,14 +38,11 @@ class TagsController extends Controller
      */
     public function store(Request $request)
     {
-        $tag = new Tag();
-        $tag->save();
-
         foreach ($this->langs as $lang):
-            $tag->translations()->create([
-                'lang_id' => $lang->id,
-                'name' => request('name_' . $lang->lang),
-            ]);
+            $tag = new Tag();
+            $tag->name = request('name_' . $lang->lang);
+            $tag->lang_id = $lang->id;
+            $tag->save();
         endforeach;
 
         session()->flash('message', 'New item has been created!');
@@ -61,7 +58,7 @@ class TagsController extends Controller
      */
     public function edit($id)
     {
-        $tag = Tag::with('translation')->findOrFail($id);
+        $tag = Tag::findOrFail($id);
 
         return view('admin.tags.edit', compact('tag'));
     }
@@ -75,16 +72,16 @@ class TagsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $tag = Tag::findOrFail($id);
-
-        $tag->translations()->delete();
-
-        foreach ($this->langs as $lang):
-            $tag->translations()->create([
-                'lang_id' => $lang->id,
-                'name' => request('name_' . $lang->lang),
-            ]);
-        endforeach;
+//        $tag = Tag::findOrFail($id);
+//
+////        $tag->translations()->delete();
+////
+////        foreach ($this->langs as $lang):
+////            $tag->translations()->create([
+////                'lang_id' => $lang->id,
+////                'name' => request('name_' . $lang->lang),
+////            ]);
+////        endforeach;
 
         session()->flash('message', 'Item has been updated!');
 

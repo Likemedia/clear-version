@@ -40,6 +40,7 @@ class PostsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -65,24 +66,26 @@ class PostsController extends Controller
                 'meta_description' => request('meta_description_' . $lang->lang),
             ]);
 
-            $tags = request('tags_'.$lang->lang);
 
-            foreach ($tags as  $newTag):
-                 $tag = new Tag();
+            $tags = request('tag_' . $lang->lang);
+            foreach ($tags as $newTag):
+                $tag = new Tag();
                 $tag->lang_id = $lang->id;
                 $tag->post_id = $post->id;
                 $tag->name = $newTag;
+                $tag->save();
             endforeach;
 
-            if (request('tag_'.$lang->lang) != null) {
-                $tags1 = request('tag_'.$lang->lang);
-                foreach ($tags1 as $newTag):
-                    $tag = new Tag();
-                    $tag->lang_id = $lang->id;
-                    $tag->post_id = $post->id;
-                    $tag->name = $newTag;
-                endforeach;
-            }
+            $tags1 = request('tags_' . $lang->lang);
+            foreach ($tags1 as $newTag):
+                $tag = new Tag();
+                $tag->lang_id = $lang->id;
+                $tag->post_id = $post->id;
+                $tag->name = $newTag;
+                $tag->save();
+            endforeach;
+
+
         endforeach;
 
 
@@ -95,6 +98,7 @@ class PostsController extends Controller
      * Display the specified resource.
      *
      * @param  int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -106,6 +110,7 @@ class PostsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -117,7 +122,8 @@ class PostsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -129,6 +135,7 @@ class PostsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

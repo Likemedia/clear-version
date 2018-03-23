@@ -117,8 +117,8 @@
 
                             <li>
                                 @foreach($tags as $tag)
-                                    @if($tag->id == $lang->id)
-                                        <input type="checkbox" name="tags[]">{{ $tag->name }}
+                                    @if($tag->lang_id == $lang->id)
+                                        <input type="checkbox" name="tags_{{ $lang->lang }}[]" value="{{ $tag->name }}">{{ $tag->name }}
                                     @endif
                                 @endforeach
                             </li>
