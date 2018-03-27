@@ -14,11 +14,18 @@
 
     <div class="list-content">
 
-        <form class="form-reg" method="POST" action="{{ route('modules.store') }}">
+        <form class="form-reg" method="POST" action="{{ route('submodules.store') }}">
             {{ csrf_field() }}
 
             <div class="part left-part">
                 <ul>
+                    <li>
+                        <select name="module_id">
+                            @foreach($modules as $module)
+                                <option value="{{ $module->id }}">{{ $module->translation()->first()->name }}</option>
+                            @endforeach
+                        </select>
+                    </li>
                     @foreach($langs as $lang)
                         <li>
                             <label for="name">{{trans('variables.title_table')}} {{ $lang->lang }}</label>

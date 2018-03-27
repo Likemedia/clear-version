@@ -25,18 +25,19 @@
                             <li class="{{ request()->segment(2) == $m->src  ? 'active' : ''}}" >
 
 
-                                <a class="{{ count($m->modules_submenu) > 0 ? 'drop-down' : '' }}"
-                                   href="{{ url('/back/'.$m->src) }}">
+                                <a class="{{ count($m->submenu) > 0 ? 'drop-down' : '' }}"
+                                   href="/back/{{ $m->src }}">
                                     <i class="fa {{ $m->icon }}"></i>
 
-
-                                    {{ $m->translation()->first()->name ?? '' }} {!! count($m->modules_submenu) > 0 ? '<i class="fa arrow"></i></a>' : '' !!}
+                                    {{ $m->translation->first()->name ?? '' }} {!! count($m->submenu) > 0 ? '<i class="fa arrow"></i></a>' : '' !!}
                                 </a>
-                                @if(count($m->modules_submenu) > 0)
+                                @if(count($m->submenu) > 0)
                                     <ul class="drop-hd">
-                                        @foreach($m->modules_submenu as $mod_sub)
-                                            <li {{Request::url() == url($lang.'/back/'.$m->src.'/'.$mod_sub->src) ? 'class=active' : ''}}>
-                                                <a href="{!! url($lang.'/back/'.$m->src.'/'.$mod_sub->src) !!}" {{Request::segment(4) == $m->src ? 'class=active-menu' : ''}}>{{ $mod_sub->{'name_'.$lang} }}</a>
+                                        @foreach($m->submenu as $mod_sub)
+                                            <li>
+                                                <a href="/back/{{ $mod_sub->src }}">
+                                                    {{ $mod_sub->translation->first()->name }}
+                                                </a>
                                             </li>
                                         @endforeach
                                     </ul>

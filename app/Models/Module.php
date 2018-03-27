@@ -13,7 +13,7 @@ class Module extends Model
 
     public function submenu()
     {
-        return $this->hasMany(ModuleSubMenu::class, 'module_id', 'id');
+        return $this->hasMany(ModuleSubMenu::class);
     }
 
     public function translations()
@@ -27,14 +27,5 @@ class Module extends Model
 
         return $this->hasMany(ModuleTranslation::class)->where('lang_id', $lang);
     }
-
-
-
-
-    public function modulesPermission()
-    {
-        return $this->hasMany(AdminUserActionPermision::class, 'module_id', 'id');
-    }
-
 
 }

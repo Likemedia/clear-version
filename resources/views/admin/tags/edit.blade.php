@@ -1,13 +1,13 @@
-@extends('app')
-@include('nav-bar')
-@include('left-menu')
+@extends('admin.app')
+@include('admin.nav-bar')
+@include('admin.left-menu')
 @section('content')
 
-    @include('speedbar')
+    @include('admin.speedbar')
 
     <div class="list-content">
         <div class="tab-area">
-            @include('alerts')
+            @include('admin.alerts')
         </div>
 
         <form class="form-reg" method="POST" action="{{ route('tags.update', $tag->id) }}">
@@ -35,6 +35,6 @@
 
 @section('footer')
     <footer>
-        @include('footer')
+        @include('admin.footer')
     </footer>
 @stop

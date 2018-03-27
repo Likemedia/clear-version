@@ -30,6 +30,7 @@ class TagsController extends Controller
 
         $zeroCountTags = Tag::where('post_id', null)->whereNotIn('id', $ids)->get();
 
+
         return view('admin.tags.index', compact('tags', 'zeroCountTags'));
     }
 

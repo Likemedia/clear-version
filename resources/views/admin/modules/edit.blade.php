@@ -1,10 +1,10 @@
-@extends('app')
-@include('nav-bar')
-@include('left-menu')
+@extends('admin.app')
+@include('admin.nav-bar')
+@include('admin.left-menu')
 @section('content')
 
-    @include('speedbar')
-    @include('list-elements', [
+    @include('admin.speedbar')
+    @include('admin.list-elements', [
         'actions' => [
             trans('variables.elements_list') => urlForFunctionLanguage($lang, ''),
             trans('variables.add_element') => urlForFunctionLanguage($lang, 'item/create'),
@@ -78,6 +78,6 @@
 
 @section('footer')
     <footer>
-        @include('footer')
+        @include('admin.footer')
     </footer>
 @stop

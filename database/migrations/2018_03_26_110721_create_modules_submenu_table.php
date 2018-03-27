@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePostsTable extends Migration
+class CreateModulesSubmenuTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,17 @@ class CreatePostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('modules_submenu', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->increments('id');
-            $table->string('image');
-            $table->unsignedInteger('category_id');
-            $table->unsignedInteger('votes');
-            $table->float('rating');
+            $table->unsignedInteger('module_id');
+            $table->string('src');
+            $table->string('table_name');
+            $table->string('controller');
+
+            $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
@@ -32,6 +35,6 @@ class CreatePostsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('modules_submenu');
     }
 }

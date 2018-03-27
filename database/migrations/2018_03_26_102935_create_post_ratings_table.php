@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePostsTable extends Migration
+class CreatePostRatingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreatePostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-
+        Schema::create('post_ratings', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('image');
-            $table->unsignedInteger('category_id');
-            $table->unsignedInteger('votes');
-            $table->float('rating');
+            $table->unsignedInteger('votes_from');
+            $table->unsignedInteger('votes_to');
+            $table->unsignedInteger('rating_from');
+            $table->unsignedInteger('rating_to');
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ class CreatePostsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('post_ratings');
     }
 }

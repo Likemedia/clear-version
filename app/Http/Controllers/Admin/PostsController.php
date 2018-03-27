@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\PostRating;
 use App\Models\Tag;
 use App\Models\Post;
 use App\Models\Category;
@@ -17,7 +18,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::with(['translation', 'tags'])->get();
+        $posts = Post::with(['translation', 'tags'])->paginate(2);
 
         return view('admin.posts.index', compact('posts'));
     }
@@ -45,12 +46,22 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-//        $name = time() . '-' . $request->image->getClientOriginalName();
-//        $request->image->move('images/posts', $name);
+//        return number_format(round(rand(499, 500) / 100, 2), 2);
+
+        $stats = PostRating::first();
+        $rating_from = $stats->rating_from * 100;
+        $rating_to = $stats->rating_to * 100;
+        $votes = rand($stats->votes_from, $stats->votes_to);
+        $rating = number_format(round(rand($rating_from, $rating_to) / 100, 2), 2);
+
+        $name = time() . '-' . $request->image->getClientOriginalName();
+        $request->image->move('images/posts', $name);
 
         $post = new Post();
         $post->category_id = $request->category_id;
-//        $post->image = $name;
+        $post->image = $name;
+        $post->votes = $votes;
+        $post->rating =  $rating;
         $post->save();
 
 
@@ -117,7 +128,13 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::with(['translations', 'tags'])->findOrFail($id);
+
+        $categories = Category::all();
+
+        $tags = Tag::all();
+
+        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**

@@ -27,12 +27,14 @@
                 <select class="form-control" name="category_id">
                     <option disabled>- - -</option>
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->translation()->first()->name }}</option>
+                        <option {{ $category->id == $post->categry_id ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->translation()->first()->name }}</option>
                     @endforeach
                 </select>
 
                 <label>Image</label>
                 <input type="file" name="image">
+
+                <img src="/images/posts/{{ $post->image }}" alt="">
 
             </div>
 
@@ -63,15 +65,25 @@
 
                                 <li>
                                     <label>{{trans('variables.title_table')}}</label>
-                                     <input type="text" name="title_{{ $lang->lang }}"
-                                    class="name"
-                                    data-lang="{{ $lang->lang }}">
+                                    <input type="text" name="title_{{ $lang->lang }}" class="name" data-lang="{{ $lang->lang }}"
+                                           @foreach($post->translations as $translation)
+                                           @if ($translation->lang_id == $lang->id)
+                                           value="{{ $translation->title }}"
+                                            @endif
+                                            @endforeach
+                                    >
                                 </li>
 
                                 <li>
                                     <label for="">{{trans('variables.body')}}</label>
                                     <textarea name="body_{{ $lang->lang }}" id="body-{{ $lang->lang }}"
-                                              data-type="ckeditor"></textarea>
+                                              data-type="ckeditor">
+                                         @foreach($post->translations as $translation)
+                                            @if ($translation->lang_id == $lang->id)
+                                                {!! $translation->body !!}
+                                            @endif
+                                        @endforeach
+                                    </textarea>
                                     <script>
                                         CKEDITOR.replace('body-{{ $lang->lang }}', {
                                             language: '{{$lang->lang}}',
@@ -89,35 +101,68 @@
                                     <label>URL</label>
                                     <input type="text" name="url_{{ $lang->lang }}"
                                            class="slug form-control"
-                                           id="slug-{{ $lang->lang }}">
+                                           id="slug-{{ $lang->lang }}"
+                                           @foreach($post->translations as $translation)
+                                           @if ($translation->lang_id == $lang->id)
+                                           value="{{ $translation->url }}"
+                                            @endif
+                                            @endforeach
+                                    >
                                 </li>
 
                                 <li>
                                     <label>Slug</label>
-                                    <input class="slug"  type="text" name="slug_{{ $lang->lang }}">
+                                    <input class="slug"  type="text" name="slug_{{ $lang->lang }}"
+                                           @foreach($post->translations as $translation)
+                                           @if ($translation->lang_id == $lang->id)
+                                           value="{{ $translation->slug }}"
+                                            @endif
+                                            @endforeach
+                                    >
 
                                 </li>
 
 
                                 <li>
                                     <label>{{trans('variables.meta_title_page')}}</label>
-                                    <input type="text" name="meta_title_{{ $lang->lang }}">
+                                    <input type="text" name="meta_title_{{ $lang->lang }}"
+                                           @foreach($post->translations as $translation)
+                                           @if ($translation->lang_id == $lang->id)
+                                           value="{{ $translation->meta_title }}"
+                                            @endif
+                                            @endforeach
+                                    >
                                 </li>
 
                                 <li>
                                     <label>{{trans('variables.meta_keywords_page')}}</label>
-                                    <input type="text" name="meta_keywords_{{ $lang->lang }}">
+                                    <input type="text" name="meta_keywords_{{ $lang->lang }}"
+                                           @foreach($post->translations as $translation)
+                                           @if ($translation->lang_id == $lang->id)
+                                           value="{{ $translation->meta_keywords }}"
+                                            @endif
+                                            @endforeach
+                                    >
                                 </li>
 
                                 <li>
                                     <label>{{trans('variables.meta_description_page')}}</label>
-                                    <input type="text" name="meta_description_{{ $lang->lang }}">
+                                    <input type="text" name="meta_description_{{ $lang->lang }}"
+                                           @foreach($post->translations as $translation)
+                                           @if ($translation->lang_id == $lang->id)
+                                           value="{{ $translation->meta_description }}"
+                                            @endif
+                                            @endforeach
+                                    >
                                 </li>
                             </ul>
                         </div>
 
 
                         <div style="margin-top: 25px;" class="part right-part">
+
+
+
                             <label>Tags</label>
 
                             <li>
