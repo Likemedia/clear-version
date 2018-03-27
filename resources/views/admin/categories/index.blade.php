@@ -52,7 +52,11 @@
                             success:  function(data){
                                 console.log(JSON.parse(data).message);
                                 if (JSON.parse(data).message == false) {
-                                    alert('error');
+                                    var response = JSON.parse(data);
+                                    $('#moveModal').modal('show');
+                                    $('.parent_id').val(response.parentId);
+                                    $('.child_id').val(response.childId);
+                                    // alert(response.parentId+ " " + response.childId);
                                 }
                                 $('#nestable-output').html(JSON.parse(data).text);
                             },
@@ -164,29 +168,59 @@
               </form>
           </div>
       </div>
-          {{-- <div class="modal-body">
-            <form action="{{ route('categories.move.posts') }}" method="post">
-              <input type="hidden" name="_token" value="{{ csrf_token() }}">
-              <input type="hidden" name="category_id" value="" class="category-id">
-              <div class="row">
-                <div class="col-md-4">
-                  <p>move posts from <b class="category-name"></b> to:</p>
-                </div>
-                  <div class="col-md-4">
-                    <select class="form-control" name="add_to">
-                        @if (!empty($categories))
-                              @foreach($categories as $category)
-                                  <option value="{{ $category->id }}">{{ $category->translation()->first()->name }}</option>
-                              @endforeach
-                        @endif
-                      </select>
-                  </div>
-                  <div class="col-md-4">
-                    <input type="submit" name="" value="move" class="btn btn-primary">
-                  </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade bd-example-modal-lg" id="moveModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="exampleModalLabel">Category <b class="category-name"></b> is not empty</h5>
+          </div>
+
+          <div class="modal-body">
+              <div class="alert alert-warning">
+                Atentie! Toate articolele din <b class="category-name"></b> vor fi mutate in categoria creata
               </div>
-            </form>
-          </div> --}}
+              <form action="{{ route('categories.move.posts_') }}" method="post">
+                  {{ csrf_field() }}
+
+                  <input type="hidden" name="parent_id" class="parent_id" value="0"/>
+                  <input type="hidden" name="child_id" class="child_id" value="0"/>
+
+                  <div class="list-content">
+                      @include('alerts')
+                              <div class="part full-part">
+                                  <ul>
+                                      <li>
+                                        <label>Toate articolele din categoria <b class="category-name"></b> vor fi mutate in subcategoria nou creata. Daca doriti sa le mutati in alta categorie, alegeti mai jos:</label>
+                                        @if (!empty($categories))
+                                           <select class="form-control" name="add">
+                                              @foreach($categories as $category)
+                                                  <option value="{{ $category->id }}">{{ $category->translation()->first()->name }}</option>
+                                              @endforeach
+                                            </select>
+                                        @endif
+                                      </li>
+                                      <li>
+                                          <input style="margin-top: 10px;" type="submit" class="btn btn-primary" value="{{trans('variables.save_it')}}">
+                                      </li>
+                                  </ul>
+                              </div>
+
+                          </div>
+
+              </form>
+          </div>
+      </div>
         </div>
 
       </div>

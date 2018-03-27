@@ -168,6 +168,8 @@ class CategoriesController extends Controller
         $list = Input::get('list');
         $positon = 1;
         $response = true;
+        $parentId = 0;
+        $childId = 0;
 
         if (!empty($list)) {
             foreach ($list as $key => $value) {
@@ -180,6 +182,8 @@ class CategoriesController extends Controller
                           Category::where('id', $value1['id'])->update(['parent_id' => $value['id'], 'position' => $positon]);
                         }else{
                             $response = false;
+                            $parentId = $value['id'];
+                            $childId = $value1['id'];
                         }
                         if (array_key_exists('children', $value1)) {
                             foreach ($value1['children'] as $key2 => $value2) {
@@ -188,6 +192,8 @@ class CategoriesController extends Controller
                                   Category::where('id', $value2['id'])->update(['parent_id' => $value1['id'], 'position' => $positon]);
                                 }else{
                                     $response = false;
+                                    $parentId = $value1['id'];
+                                    $childId = $value2['id'];
                                 }
                                 if (array_key_exists('children', $value2)) {
                                     foreach ($value2['children'] as $key3 => $value3) {
@@ -196,6 +202,8 @@ class CategoriesController extends Controller
                                           Category::where('id', $value3['id'])->update(['parent_id' => $value2['id'], 'position' => $positon]);
                                         }else{
                                             $response = false;
+                                            $parentId = $value2['id'];
+                                            $childId = $value3['id'];
                                         }
                                     }
                                 }
@@ -206,7 +214,7 @@ class CategoriesController extends Controller
             }
         }
 
-        return  json_encode (['text' => SelectGoodsCatsTree(1, 0, $curr_id=null), 'message' => $response ]);
+        return  json_encode (['text' => SelectGoodsCatsTree(1, 0, $curr_id=null), 'message' => $response, 'parentId' =>  $parentId, 'childId' => $childId]);
     }
 
     public function movePosts(Request $request)
@@ -238,6 +246,30 @@ class CategoriesController extends Controller
                 ]);
             }
         }
+
+        session()->flash('message', 'New item has been created!');
+
+        return redirect()->route('categories.index');
+    }
+
+    public function movePosts_(Request $request)
+    {
+      // dd($request->all());
+        $posts = Post::where('category_id', $request->parent_id)->get();
+
+        $addToId = $request->add;
+
+        if (!empty($posts)) {
+            foreach ($posts as $key => $post) {
+                Post::where('id', $post->id)->update([
+                    'category_id' => $addToId,
+                ]);
+            }
+        }
+
+        Category::where('id', $request->child_id)->update([
+            'parent_id' =>  $request->parent_id,
+        ]);
 
         session()->flash('message', 'New item has been created!');
 

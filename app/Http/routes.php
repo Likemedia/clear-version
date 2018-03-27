@@ -17,7 +17,6 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
 
     Route::get('/users', 'Admin\AdminUserController@index');
 
-
     Route::resource('/pages', 'Admin\PagesController');
     Route::patch('/pages/{id}/change-status', 'Admin\PagesController@status')->name('pages.change.status');
 
@@ -26,9 +25,10 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
 
     Route::resource('/categories', 'Admin\CategoriesController');
     Route::post('/categories/move/posts', 'Admin\CategoriesController@movePosts')->name('categories.move.posts');
+    Route::post('/categories/move/posts_', 'Admin\CategoriesController@movePosts_')->name('categories.move.posts_');
     Route::post('/categories/change', 'Admin\CategoriesController@change')->name('categories.change');
     Route::post('/categories/part', 'Admin\CategoriesController@partialSave')->name('categories.partial.save');
-    
+
     Route::post('/categories/part', 'Admin\CategoriesController@partialSave')->name('categories.partial.save');
 
     Route::resource('/tags', 'Admin\TagsController');
