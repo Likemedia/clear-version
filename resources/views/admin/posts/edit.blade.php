@@ -161,8 +161,6 @@
 
                         <div style="margin-top: 25px;" class="part right-part">
 
-
-
                             <label>Tags</label>
 
                             <li>

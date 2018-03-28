@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
 
         \View::share('lang', Lang::where('lang', session('applocale') ?? 'ro')->get());
 
-        \View::share('menu', Module::with(['submenu.translation', 'translation'])->get());
+        \View::share('menu', Module::with(['submenu.translation', 'translation'])->orderBy('position')->get());
     }
 
     /**

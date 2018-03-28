@@ -25,7 +25,7 @@
 <div class="header-block header-block-nav">
     <ul class="nav-profile">
         <li class="profile dropdown">
-            <a class="nav-link" href="{{ url(1 . '/back/admin_user/administrator/edituser/'.Auth::user()->id) }}"> <span class="name">Hi,
+            <a class="nav-link" href=""> <span class="name">Hi,
             {{ Auth::user()->name }} </span> </a>
         </li>
     </ul>

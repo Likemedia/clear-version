@@ -29,7 +29,7 @@
             </thead>
             <tbody>
             @foreach($modules as $key => $module)
-                <tr>
+                <tr id="{{ $module->id }}">
                     <td>#{{ $key + 1 }}</td>
                     <td>
                         {{ $module->translations->first()->name ?? trans('variables.another_name')}}

@@ -22,7 +22,6 @@ class ModulesController extends Controller
         return view('admin.modules.index', compact('modules'));
     }
 
-    // ajax response for position
     public function changePosition()
     {
         $neworder = Input::get('neworder');

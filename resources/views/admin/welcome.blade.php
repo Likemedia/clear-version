@@ -16,7 +16,11 @@
                         <div class="card-block">
 
                             <div class="title-block">
-                                <h4 class="title"> <a href="{{ url('/back/' . $m->src) }}">Model name</a> </h4>
+                                <h4 class="title">
+                                    <a href="{{ url('/back/' . $m->translation->first()->name) }}">
+                                        {{ $m->translation->first()->name }}
+                                    </a>
+                                </h4>
                                 <p class="title-description"> <small>Change it</small> </p>
                             </div>
 

@@ -22,6 +22,7 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     Route::patch('/pages/{id}/change-status', 'Admin\PagesController@status')->name('pages.change.status');
 
     Route::resource('/modules', 'Admin\ModulesController');
+    Route::post('/modules/changePosition', 'Admin\ModulesController@changePosition');
 
     Route::resource('submodules', 'Admin\SubModulesController');
 
