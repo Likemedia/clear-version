@@ -21,6 +21,10 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
     Route::patch('/pages/{id}/change-status', 'Admin\PagesController@status')->name('pages.change.status');
 
     Route::resource('/modules', 'Admin\ModulesController');
+    Route::post('/modules/changePosition', 'Admin\ModulesController@changePosition');
+
+    Route::resource('submodules', 'Admin\SubModulesController');
+
     Route::resource('/forms', 'Admin\FormsController');
 
     Route::resource('/categories', 'Admin\CategoriesController');
@@ -40,6 +44,9 @@ Route::group(['prefix' => 'back', 'middleware' => 'auth'], function () {
 
         Route::resource('/languages', 'Admin\LanguagesController');
         Route::patch('/languages/set-default/{id}', 'Admin\LanguagesController@setDefault')->name('languages.default');
+
+        Route::get('/reviews', 'Admin\PostsRatingController@index')->name('reviews.index');
+        Route::patch('/reviews', 'Admin\PostsRatingController@update')->name('reviews.update');
 
     });
 

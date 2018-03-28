@@ -1,16 +1,16 @@
-@extends('app')
-@include('nav-bar')
-@include('left-menu')
+@extends('admin.app')
+@include('admin.nav-bar')
+@include('admin.left-menu')
 
 @section('content')
-@include('speedbar')
+@include('admin.speedbar')
 
-@include('list-elements', [
+@include('admin.list-elements', [
     'actions' => [
         trans('variables.add_element') => route('languages.create'),
     ]
 ])
-@include('alerts')
+@include('admin.alerts')
 
 @if(!empty($languages))
     <table class="el-table" id="tablelistsorter">
@@ -71,6 +71,6 @@
 
 @section('footer')
 <footer>
-    @include('footer')
+    @include('admin.footer')
 </footer>
 @stop

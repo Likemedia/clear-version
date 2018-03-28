@@ -1,11 +1,11 @@
-@extends('app')
-@include('nav-bar')
-@include('left-menu')
+@extends('admin.app')
+@include('admin.nav-bar')
+@include('admin.left-menu')
 @section('content')
 
-    @include('speedbar')
+    @include('admin.speedbar')
 
-    @include('list-elements', [
+    @include('admin.list-elements', [
         'actions' => [
             trans('variables.elements_list') => urlForFunctionLanguage($lang, ''),
             trans('variables.add_element') => urlForFunctionLanguage($lang, 'item/create'),
@@ -18,20 +18,18 @@
             {{ csrf_field() }}
 
             <div class="part left-part">
-
                 <ul>
-                    @foreach($lang_list as $lang_key => $one_lang)
+                    @foreach($langs as $lang)
                         <li>
-                            <label for="name">{{trans('variables.title_table')}} {{ $one_lang->lang }}</label>
-                            <input type="text" name="name_{{ $one_lang->lang }}" id="name_{{ $one_lang->lang }}">
+                            <label for="name">{{trans('variables.title_table')}} {{ $lang->lang }}</label>
+                            <input type="text" name="name_{{ $lang->lang }}" id="name_{{ $lang->lang }}">
                         </li>
                         <li>
-                            <label>{{trans('variables.description')}} {{ $one_lang->lang }}</label>
-                            <textarea name="description_{{ $one_lang->lang }}"></textarea>
+                            <label>{{trans('variables.description')}} {{ $lang->lang }}</label>
+                            <textarea name="description_{{ $lang->lang }}"></textarea>
                         </li>
                     @endforeach
                 </ul>
-
             </div>
 
             <div class="part right-part">
@@ -63,6 +61,6 @@
 
 @section('footer')
     <footer>
-        @include('footer')
+        @include('admin.footer')
     </footer>
 @stop

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\PostRating;
 use App\Models\Tag;
 use App\Models\Post;
 use App\Models\Category;
@@ -17,7 +18,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('translation')->get();
+        $posts = Post::with(['translation', 'tags'])->paginate(2);
 
         return view('admin.posts.index', compact('posts'));
     }
@@ -31,7 +32,7 @@ class PostsController extends Controller
     {
         $categories = Category::where('level', 1)->get();
 
-        $tags = Tag::with('translation')->get();
+        $tags = Tag::distinct()->get(['name', 'lang_id']);
 
         return view('admin.posts.create', compact('categories', 'tags'));
     }
@@ -39,18 +40,31 @@ class PostsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-//        $name = time() . '-' . $request->image->getClientOriginalName();
-//        $request->image->move('images/posts', $name);
+
+//        return number_format(round(rand(499, 500) / 100, 2), 2);
+
+        $stats = PostRating::first();
+        $rating_from = $stats->rating_from * 100;
+        $rating_to = $stats->rating_to * 100;
+        $votes = rand($stats->votes_from, $stats->votes_to);
+        $rating = number_format(round(rand($rating_from, $rating_to) / 100, 2), 2);
+
+        $name = time() . '-' . $request->image->getClientOriginalName();
+        $request->image->move('images/posts', $name);
 
         $post = new Post();
         $post->category_id = $request->category_id;
-//        $post->image = $name;
+        $post->image = $name;
+        $post->votes = $votes;
+        $post->rating =  $rating;
         $post->save();
+
 
         foreach ($this->langs as $lang):
             $post->translations()->create([
@@ -64,17 +78,29 @@ class PostsController extends Controller
                 'meta_description' => request('meta_description_' . $lang->lang),
             ]);
 
-//            if ($request->tags)
+            if ( (request('tag_' . $lang->lang) != null) && !(request('tag_' . $lang->lang)[0] == "") ) {
+                $tags = request('tag_' . $lang->lang);
+                foreach ($tags as $newTag):
+                    $tag = new Tag();
+                    $tag->lang_id = $lang->id;
+                    $tag->post_id = $post->id;
+                    $tag->name = $newTag;
+                    $tag->save();
+                endforeach;
+            }
+
+            if ( request('tags_' . $lang->lang) != null ) {
+                $tags1 = request('tags_' . $lang->lang);
+                foreach ($tags1 as $newTag):
+                    $tag = new Tag();
+                    $tag->lang_id = $lang->id;
+                    $tag->post_id = $post->id;
+                    $tag->name = $newTag;
+                    $tag->save();
+                endforeach;
+            }
+
         endforeach;
-
-        if ($request->tags != null) {
-
-            foreach ($request->tags as $tag):
-                $post->tags()->attach($tag);
-            endforeach;
-
-        }
-
 
 
         session()->flash('message', 'New item has been created!');
@@ -85,7 +111,8 @@ class PostsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -96,19 +123,27 @@ class PostsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        //
+        $post = Post::with(['translations', 'tags'])->findOrFail($id);
+
+        $categories = Category::all();
+
+        $tags = Tag::all();
+
+        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -119,15 +154,16 @@ class PostsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
 
-        if ( file_exists('/images/posts'.$post->image)) {
-            unlink('/images/posts'.$post->image);
+        if (file_exists('/images/posts' . $post->image)) {
+            unlink('/images/posts' . $post->image);
         }
 
         $post->delete();

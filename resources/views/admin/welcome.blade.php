@@ -1,9 +1,9 @@
-@extends('app')
-@include('nav-bar')
-@include('left-menu')
+@extends('admin.app')
+@include('admin.nav-bar')
+@include('admin.left-menu')
 @section('content')
 
-@include('alerts')
+@include('admin.alerts')
 
 
  <article class="dashboard-page">
@@ -16,7 +16,11 @@
                         <div class="card-block">
 
                             <div class="title-block">
-                                <h4 class="title"> <a href="{{ url('/back/' . $m->src) }}">Model name</a> </h4>
+                                <h4 class="title">
+                                    <a href="{{ url('/back/' . $m->translation->first()->name) }}">
+                                        {{ $m->translation->first()->name }}
+                                    </a>
+                                </h4>
                                 <p class="title-description"> <small>Change it</small> </p>
                             </div>
 
@@ -25,10 +29,10 @@
                                 <div class="col-xs-12 col-sm-6 stat-col">
                                     <div class="stat-icon"> <i class="fa {{ $m->icon }}"></i> </div>
                                     <div class="stat">
-                                        <div class="value"> {{ countTableItems($m->table_name) }} </div>
+                                        <div class="value"> 25 </div>
                                         <div class="name"> количество элементов </div>
                                     </div>
-                                    <progress class="progress stat-progress" value="{{ countTableItems($m->table_name) }}" max="100">
+                                    <progress class="progress stat-progress" value="90" max="100">
                                         <div class="progress">
                                             <span class="progress-bar" style="width: 15%;"></span>
                                         </div>
@@ -62,6 +66,6 @@
 
 @section('footer')
     <footer>
-        @include('footer')
+        @include('admin.footer')
     </footer>
 @stop

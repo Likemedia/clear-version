@@ -28,12 +28,12 @@ $(document).ready(function() {
 
     $('#tablelistsorter').tableDnD({
         onDrop: function(table, row) {
-            var action = $('#tablelistsorter').attr('action')
+            var action = $('#tablelistsorter').attr('action');
             if(action != undefined){
-                var  url = $('#tablelistsorter').attr('url')+ '/ajaxRequest/changePosition'
+                var  url = $('#tablelistsorter').attr('url')+ '/changePosition'
             }
             else{
-                var url = window.location.pathname + '/ajaxRequest/changePosition'
+                var url = window.location.pathname + '/changePosition'
             }
             $.ajax({
                 type: "POST",
@@ -306,18 +306,18 @@ $(document).ready(function() {
     })
     // End datepicker
 
-    //Select with search
-    var config = {
-        '.chosen-select'           : {},
-        '.chosen-select-deselect'  : {allow_single_deselect:true},
-        '.chosen-select-no-single' : {disable_search_threshold:10},
-        '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
-        '.chosen-select-width'     : {width:"100%"}
-    }
-    for (var selector in config) {
-        $(selector).chosen(config[selector]);
-    }
-    //End select with search
+    // //Select with search
+    // var config = {
+    //     '.chosen-select'           : {},
+    //     '.chosen-select-deselect'  : {allow_single_deselect:true},
+    //     '.chosen-select-no-single' : {disable_search_threshold:10},
+    //     '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+    //     '.chosen-select-width'     : {width:"100%"}
+    // }
+    // for (var selector in config) {
+    //     $(selector).chosen(config[selector]);
+    // }
+    // //End select with search
 
     //Confirmation
     $('.destroy-element').click(function(e){
@@ -329,30 +329,6 @@ $(document).ready(function() {
     })
     //Confirmation
 
-    //Fancybox
-    $('.fancybox-thumbs').fancybox({
-        prevEffect : 'none',
-        nextEffect : 'none',
-
-        closeBtn  : true,
-        arrows    : true,
-        nextClick : true,
-        autoSize : false,
-        maxHeight : 450,
-
-        helpers	: {
-            title	: {
-                type: 'outside'
-            },
-            //thumbs	: {
-            //    width	: 50,
-            //    height	: 50,
-            //    position: 'top'
-            //}
-
-        }
-    });
-    //Fancybox
 });
 
 

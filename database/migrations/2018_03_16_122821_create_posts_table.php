@@ -19,6 +19,8 @@ class CreatePostsTable extends Migration
             $table->increments('id');
             $table->string('image');
             $table->unsignedInteger('category_id');
+            $table->unsignedInteger('votes');
+            $table->float('rating');
             $table->timestamps();
         });
     }

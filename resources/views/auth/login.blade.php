@@ -94,7 +94,7 @@
 
 @section('footer')
 	<footer>
-		@include('footer')
+		@include('admin.footer')
 	</footer>
 @stop
 

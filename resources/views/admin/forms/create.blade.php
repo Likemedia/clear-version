@@ -1,14 +1,14 @@
-@extends('app')
-@include('nav-bar')
-@include('left-menu')
+@extends('admin.app')
+@include('admin.nav-bar')
+@include('admin.left-menu')
 @section('content')
 
-    @include('speedbar')
+    @include('admin.speedbar')
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="http://formbuilder.online/assets/js/form-builder.min.js"></script>
 
-    @include('list-elements', [
+    @include('admin.list-elements', [
         'actions' => [
             trans('variables.elements_list') => route('forms.index'),
             trans('variables.add_element') => route('forms.create'),
@@ -19,7 +19,7 @@
     <form class="form-reg" role="form" method="POST" action="{{ route('forms.store') }}" id="add-form">
         {{ csrf_field() }}
 
-        @include('alerts')
+        @include('admin.alerts')
 
 
         <div class="form-group">
@@ -141,7 +141,7 @@
 
 @section('footer')
     <footer>
-        @include('footer')
+        @include('admin.footer')
 
         {{--<script src="{{  asset('js/formBuilder/vendor.js') }}"></script>--}}
         {{--<script src="{{  asset('js/formBuilder/form-builder.min.js') }}"></script>--}}

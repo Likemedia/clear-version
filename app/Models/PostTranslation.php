@@ -17,7 +17,7 @@ class PostTranslation extends Model
         'url',
         'meta_title',
         'meta_keywords',
-        'meta_description,'
+        'meta_description'
     ];
 
     public function post()

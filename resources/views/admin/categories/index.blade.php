@@ -1,17 +1,17 @@
-@extends('app')
-@include('nav-bar')
-@include('left-menu')
+@extends('admin.app')
+@include('admin.nav-bar')
+@include('admin.left-menu')
 
 @section('content')
-    @include('speedbar')
+    @include('admin.speedbar')
 
-    @include('list-elements', [
+    @include('admin.list-elements', [
         'actions' => [
             trans('variables.elements_list') => route('categories.index'),
             trans('variables.add_element') => route('categories.create'),
         ]
     ])
-    @include('alerts')
+    @include('admin.alerts')
 
 
     <div class="list-content">
@@ -84,7 +84,7 @@
 
 @section('footer')
     <footer>
-        @include('footer')
+        @include('admin.footer')
     </footer>
 
     <!-- Modal -->
@@ -244,7 +244,7 @@
 
                         <div class="list-content">
                             <div class="tab-area">
-                                @include('alerts')
+                                @include('admin.alerts')
                                 <ul class="nav nav-tabs nav-tabs-bordered">
                                     @if (!empty($langs))
                                         @foreach ($langs as $key => $lang)

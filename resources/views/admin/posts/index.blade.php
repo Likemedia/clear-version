@@ -1,13 +1,13 @@
-@extends('app')
-@include('nav-bar')
-@include('left-menu')
+@extends('admin.app')
+@include('admin.nav-bar')
+@include('admin.left-menu')
 
 @section('content')
 
-    @include('speedbar')
+    @include('admin.speedbar')
 
 
-    @include('list-elements', [
+    @include('admin.list-elements', [
         'actions' => [
             trans('variables.elements_list') => route('posts.index'),
             trans('variables.add_element') => route('posts.create'),
@@ -15,6 +15,21 @@
     ])
 
     @if(!$posts->isEmpty())
+
+        <style>
+            table * {
+                font-size: 14px !important;
+                line-height: 1.2;
+            }
+
+            table tr td {
+                padding: 15px;
+            }
+
+            table p {
+                margin-bottom: 0;
+            }
+        </style>
 
         <table class="el-table" id="tablelistsorter">
             <thead>
@@ -24,6 +39,8 @@
                 <th>Slug</th>
                 <th>URL</th>
                 <th>Tags</th>
+                <th>Votes</th>
+                <th>Rating</th>
                 <th>{{trans('variables.edit_table')}}</th>
                 <th>{{trans('variables.delete_table')}}</th>
             </tr>
@@ -33,21 +50,30 @@
 
                 <tr>
                     <td>
-                        {{ $post->translation()->first()->title ?? trans('variables.another_name')}}
+                        <p>{{ str_limit($post->translation->first()->title, 20) }}</p>
                     </td>
                     <td>
-                        {!! $post->translation()->first()->body !!}
+                        {!! str_limit($post->translation->first()->body, 100) !!}
                     </td>
                     <td>
-                        {{ $post->translation()->first()->slug }}
+                        {{ $post->translation->first()->slug }}
                     </td>
                     <td>
-                        {{ $post->translation()->first()->url }}
+                        <p>{{ $post->translation->first()->url }}</p>
                     </td>
                     <td>
-                        @foreach($post->tags as $tag)
-                            {{ $tag->translation()->first()->name }} <br>
-                        @endforeach
+                        <p>
+                            @foreach($post->tags as $tag)
+                                {{ $tag->name }}@if(!$loop->last),
+                                @endif
+                            @endforeach
+                        </p>
+                    </td>
+                    <td>
+                        {{ $post->votes }}
+                    </td>
+                    <td>
+                        {{ $post->rating }}
                     </td>
                     <td>
                         <a href="{{ route('posts.edit', $post->id) }}">
@@ -69,7 +95,9 @@
             </tbody>
             <tfoot>
             <tr>
-                <td colspan=7></td>
+                <td colspan=9>
+                    {{ $posts->links() }}
+                </td>
             </tr>
             </tfoot>
         </table>
@@ -81,6 +109,6 @@
 
 @section('footer')
     <footer>
-        @include('footer')
+        @include('admin.footer')
     </footer>
 @stop

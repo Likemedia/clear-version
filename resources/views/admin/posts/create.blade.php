@@ -1,24 +1,24 @@
-@extends('app')
-@include('nav-bar')
-@include('left-menu')
+@extends('admin.app')
+@include('admin.nav-bar')
+@include('admin.left-menu')
 @section('content')
 
-    @include('speedbar')
-    @include('list-elements', [
+    @include('admin.speedbar')
+    @include('admin.list-elements', [
     'actions' => [
     trans('variables.elements_list') => route('posts.index'),
     trans('variables.add_element') => route('posts.create'),
     ]
     ])
 
-    @include('alerts')
+    @include('admin.alerts')
 
 
 
 
     <div class="list-content">
 
-        <form class="form-reg" method="POST" action="{{ route('posts.store') }}">
+        <form class="form-reg" method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
             {{ csrf_field() }}
 
             <div class="part full-part" style="padding: 25px 8px;">
@@ -32,7 +32,7 @@
                 </select>
 
                 <label>Image</label>
-                <input type="file">
+                <input type="file" name="image">
 
             </div>
 
@@ -40,7 +40,7 @@
             @if (!empty($langs))
 
                 <div class="tab-area" style="margin-top: 25px;">
-                    @include('alerts')
+                    @include('admin.alerts')
                     <ul class="nav nav-tabs nav-tabs-bordered">
                         @if (!empty($langs))
                             @foreach ($langs as $key => $lang)
@@ -63,7 +63,9 @@
 
                                 <li>
                                     <label>{{trans('variables.title_table')}}</label>
-                                    <input type="text" name="title_{{ $lang->lang }}">
+                                     <input type="text" name="title_{{ $lang->lang }}"
+                                    class="name"
+                                    data-lang="{{ $lang->lang }}">
                                 </li>
 
                                 <li>
@@ -72,7 +74,7 @@
                                               data-type="ckeditor"></textarea>
                                     <script>
                                         CKEDITOR.replace('body-{{ $lang->lang }}', {
-                                            language: '{{$lang}}',
+                                            language: '{{$lang->lang}}',
                                         });
                                     </script>
                                 </li>
@@ -85,23 +87,17 @@
                             <ul>
                                 <li>
                                     <label>URL</label>
-                                    <input type="text" name="url_{{ $lang->lang }}">
+                                    <input type="text" name="url_{{ $lang->lang }}"
+                                           class="slug form-control"
+                                           id="slug-{{ $lang->lang }}">
                                 </li>
 
                                 <li>
                                     <label>Slug</label>
-                                    <input type="text" name="slug_{{ $lang->lang }}">
+                                    <input class="slug"  type="text" name="slug_{{ $lang->lang }}">
+
                                 </li>
 
-                                <li>
-                                    <label>Tags</label>
-                                    <select name="tags[]" id="" multiple style="height: 80px;">
-                                        <option value="">- - -</option>
-                                        @foreach($tags as $tag)
-                                            <option value="{{ $tag->id }}">{{ $tag->translation()->first()->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </li>
 
                                 <li>
                                     <label>{{trans('variables.meta_title_page')}}</label>
@@ -123,16 +119,22 @@
 
                         <div style="margin-top: 25px;" class="part right-part">
                             <label>Tags</label>
-                            <ul class="parent-tag">
-                                <li class="tag-clone">
-                                    <input class="" type="text" name="tags_{{ $lang->lang }}[]">
-                                </li>
-                                <li>
-                                    <input class="" type="text" name="tags_{{ $lang->lang }}[]">
-                                </li>
-                            </ul>
 
-                            <button class="btn btn-primary btn-sm add-tag">+</button>
+                            <li>
+                                @foreach($tags as $tag)
+                                    @if($tag->lang_id == $lang->id)
+                                        <input type="checkbox" name="tags_{{ $lang->lang }}[]" value="{{ $tag->name }}">{{ $tag->name }}
+                                    @endif
+                                @endforeach
+                            </li>
+
+
+                            <ul>
+                                <button class="btn btn-primary btn-sm tag">+</button>
+
+                                <input type="text" name="tag_{{ $lang->lang }}[]" class="tag_{{ $lang->lang }}" />
+
+                            </ul>
                         </div>
 
 
@@ -150,16 +152,17 @@
 
 @section('footer')
     <footer>
-        @include('footer')
+        @include('admin.footer')
 
         <script>
-            $('.add-tag').click(function (e) {
+
+            $('button.tag').click(function(e) {
                 e.preventDefault();
 
-                $.each($('.parent-tag'), function( index, value ) {
-                   $('.tag-clone').eq(index).clone().removeClass("tag-clone").appendTo($('.parent-tag').eq(index));
-                });
-            })
+                $input = $(this).siblings().last().clone().val('');
+                $(this).parent().append($input);
+            });
+
         </script>
     </footer>
 @stop

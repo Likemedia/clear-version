@@ -17,12 +17,11 @@ class ModulesController extends Controller
 {
     public function index()
     {
-        $rows = Module::with('translations')->orderBy('position', 'asc')->get();
+        $modules = Module::with('translations')->orderBy('position', 'asc')->get();
 
-        return view('admin.modules.index', get_defined_vars());
+        return view('admin.modules.index', compact('modules'));
     }
 
-    // ajax response for position
     public function changePosition()
     {
         $neworder = Input::get('neworder');
