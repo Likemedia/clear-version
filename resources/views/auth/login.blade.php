@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="_token" content="{{ csrf_token() }}">
-
     <title>{{trans('variables.title_page')}}</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">

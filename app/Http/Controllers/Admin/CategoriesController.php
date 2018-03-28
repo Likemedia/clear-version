@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
@@ -34,8 +35,9 @@ class CategoriesController extends Controller
 
     public function index()
     {
+        $categories = Category::where('level', 1)->get();
 
-        return view('admin.categories.index');
+        return view('admin.categories.index', compact('categories'));
     }
 
     public function create()
@@ -47,7 +49,6 @@ class CategoriesController extends Controller
 
     public function store(Request $request)
     {
-
         $name = time() . '-' . $request->image->getClientOriginalName();
         $request->image->move('images/categories', $name);
 
@@ -77,7 +78,6 @@ class CategoriesController extends Controller
 
     public function edit($id)
     {
-
         $category = Category::with('translations')->findOrFail($id);
 
         return view('admin.categories.edit', compact('category'));
@@ -167,26 +167,44 @@ class CategoriesController extends Controller
     {
         $list = Input::get('list');
         $positon = 1;
+        $response = true;
+        $parentId = 0;
+        $childId = 0;
 
         if (!empty($list)) {
             foreach ($list as $key => $value) {
                 $positon++;
                 Category::where('id', $value['id'])->update(['parent_id' => 0, 'position' => $positon]);
-
                 if (array_key_exists('children', $value)) {
                     foreach ($value['children'] as $key1 => $value1) {
-                        $positon++;
-                        Category::where('id', $value1['id'])->update(['parent_id' => $value['id'], 'position' => $positon]);
-
+                        if (!checkPosts($value['id'])) {
+                          $positon++;
+                          Category::where('id', $value1['id'])->update(['parent_id' => $value['id'], 'position' => $positon]);
+                        }else{
+                            $response = false;
+                            $parentId = $value['id'];
+                            $childId = $value1['id'];
+                        }
                         if (array_key_exists('children', $value1)) {
                             foreach ($value1['children'] as $key2 => $value2) {
-                                $positon++;
-                                Category::where('id', $value2['id'])->update(['parent_id' => $value1['id'], 'position' => $positon]);
-
+                                if (!checkPosts($value1['id'])) {
+                                  $positon++;
+                                  Category::where('id', $value2['id'])->update(['parent_id' => $value1['id'], 'position' => $positon]);
+                                }else{
+                                    $response = false;
+                                    $parentId = $value1['id'];
+                                    $childId = $value2['id'];
+                                }
                                 if (array_key_exists('children', $value2)) {
                                     foreach ($value2['children'] as $key3 => $value3) {
-                                        $positon++;
-                                        Category::where('id', $value3['id'])->update(['parent_id' => $value2['id'], 'position' => $positon]);
+                                        if (!checkPosts($value2['id'])) {
+                                          $positon++;
+                                          Category::where('id', $value3['id'])->update(['parent_id' => $value2['id'], 'position' => $positon]);
+                                        }else{
+                                            $response = false;
+                                            $parentId = $value2['id'];
+                                            $childId = $value3['id'];
+                                        }
                                     }
                                 }
                             }
@@ -195,6 +213,67 @@ class CategoriesController extends Controller
                 }
             }
         }
+
+        return  json_encode (['text' => SelectGoodsCatsTree(1, 0, $curr_id=null), 'message' => $response, 'parentId' =>  $parentId, 'childId' => $childId]);
+    }
+
+    public function movePosts(Request $request)
+    {
+        $category = new Category();
+        $category->parent_id = $request->parent_id;
+        $category->save();
+
+        foreach ($this->langs as $lang):
+            $category->translations()->create([
+                'lang_id' => $lang->id,
+                'name' => request('name_' . $lang->lang),
+                'slug' => request('slug_' . $lang->lang),
+            ]);
+        endforeach;
+
+        $posts = Post::where('category_id', $request->parent_id)->get();
+
+        $addToId = $category->id;
+
+        if ($request->add != 0) {
+            $addToId = $request->add;
+        }
+
+        if (!empty($posts)) {
+            foreach ($posts as $key => $post) {
+                Post::where('id', $post->id)->update([
+                    'category_id' => $addToId,
+                ]);
+            }
+        }
+
+        session()->flash('message', 'New item has been created!');
+
+        return redirect()->route('categories.index');
+    }
+
+    public function movePosts_(Request $request)
+    {
+      // dd($request->all());
+        $posts = Post::where('category_id', $request->parent_id)->get();
+
+        $addToId = $request->add;
+
+        if (!empty($posts)) {
+            foreach ($posts as $key => $post) {
+                Post::where('id', $post->id)->update([
+                    'category_id' => $addToId,
+                ]);
+            }
+        }
+
+        Category::where('id', $request->child_id)->update([
+            'parent_id' =>  $request->parent_id,
+        ]);
+
+        session()->flash('message', 'New item has been created!');
+
+        return redirect()->route('categories.index');
     }
 
 }

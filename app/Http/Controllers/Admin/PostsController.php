@@ -46,6 +46,7 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
+
 //        return number_format(round(rand(499, 500) / 100, 2), 2);
 
         $stats = PostRating::first();
@@ -170,5 +171,12 @@ class PostsController extends Controller
         session()->flash('message', 'Item has been deleted!');
 
         return redirect()->route('posts.index');
+    }
+
+    public function getPostsByCategory($categoryId)
+    {
+      $posts = Post::where('category_id', $categoryId)->with('translation')->get();
+
+      return view('admin.posts.index', compact('posts'));
     }
 }

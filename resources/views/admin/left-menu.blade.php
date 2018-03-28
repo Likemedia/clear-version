@@ -17,7 +17,7 @@
                         <li>
                             <a href="/back">
                                 <i class="fa fa-dashboard"></i>Control Panel
-                                </a>
+                            </a>
                         </li>
 
                         @foreach($menu as $m)
